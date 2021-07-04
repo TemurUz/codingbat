@@ -4,4 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import pdp.uz.codingbat_app.entity.ThemeEntity;
 
 public interface ThemeRepository extends JpaRepository<ThemeEntity, Long> {
+    boolean existsByName(String name);
+
+    boolean existsByNameAndIdNot(String name, Long id);
 }

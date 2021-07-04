@@ -1,9 +1,10 @@
-package pdp.uz.codingbat_app.interfaces;
+package pdp.uz.codingbat_app.service.theme;
 
 import org.springframework.http.ResponseEntity;
 import pdp.uz.codingbat_app.entity.ThemeEntity;
 import pdp.uz.codingbat_app.entity.UsersEntity;
 import pdp.uz.codingbat_app.payload.ApiResponse;
+import pdp.uz.codingbat_app.payload.ThemeDto;
 
 import java.util.List;
 
@@ -12,9 +13,9 @@ public interface ThemeInterfaceMethod {
 
     ResponseEntity<ThemeEntity> getTheme(Long id);
 
-    ResponseEntity<ApiResponse> saveTheme(ThemeEntity themeEntity);
+    ResponseEntity<ApiResponse> saveTheme(ThemeDto themeDto);
 
-    ResponseEntity<ApiResponse> editTheme(Long id , ThemeEntity themeEntity);
+    ResponseEntity<ApiResponse> editTheme(Long id , ThemeDto themeDto);
 
-    ResponseEntity<ApiResponse> deleteTheme(Long id);
+    ApiResponse deleteTheme(Long id);
 }
