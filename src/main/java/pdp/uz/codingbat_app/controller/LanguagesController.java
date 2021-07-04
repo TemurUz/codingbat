@@ -57,7 +57,6 @@ public class LanguagesController  {
     }
 
     @DeleteMapping("/delete/{id}")
-
     public ResponseEntity<ApiResponse> deleteLanguages(@PathVariable Long id) {
         ApiResponse apiResponse = languagesService.deleteLanguages(id);
         if (apiResponse.isSuccess()){

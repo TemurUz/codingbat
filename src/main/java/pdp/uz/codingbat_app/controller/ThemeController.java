@@ -1,13 +1,13 @@
 package pdp.uz.codingbat_app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pdp.uz.codingbat_app.entity.ThemeEntity;
 import pdp.uz.codingbat_app.payload.ThemeDto;
-import pdp.uz.codingbat_app.service.theme.ThemeInterfaceMethod;
 import pdp.uz.codingbat_app.payload.ApiResponse;
-import pdp.uz.codingbat_app.service.theme.ThemeService;
+import pdp.uz.codingbat_app.service.theme.ThemeServiceImpl;
 
 import java.util.List;
 
@@ -16,32 +16,43 @@ import java.util.List;
 public class ThemeController  {
 
     @Autowired
-    private ThemeService themeService;
+    private ThemeServiceImpl themeService;
 
     @GetMapping("/list")
     public ResponseEntity<List<ThemeEntity>> getThemes(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        ResponseEntity<List<ThemeEntity>> themes = themeService.getThemes(page, size);
-        return themes;
+        List<ThemeEntity> themes = themeService.getThemes(page, size);
+        return ResponseEntity.status(200).body(themes);
     }
 
 
     @GetMapping("/{id}")
     public ResponseEntity<ThemeEntity> getTheme(@PathVariable  Long id) {
-        return themeService.getTheme(id);
+        ThemeEntity theme = themeService.getTheme(id);
+        if (theme == null)
+            return ResponseEntity.status(409).body(null);
+
+        return ResponseEntity.status(200).body(theme);
     }
 
 
     @PostMapping("/save")
     public ResponseEntity<ApiResponse> saveTheme(@RequestBody ThemeDto themeDto) {
-        return themeService.saveTheme(themeDto);
+        ApiResponse apiResponse = themeService.saveTheme(themeDto);
+        if (!apiResponse.isSuccess())
+            return ResponseEntity.status(409).body(apiResponse);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
 
     @PutMapping("/edit/{id}")
     public ResponseEntity<ApiResponse> editTheme(@PathVariable Long id, @RequestBody ThemeDto themeDto) {
 
-        return themeService.editTheme(id, themeDto);
+        ApiResponse apiResponse = themeService.editTheme(id, themeDto);
 
+        if (!apiResponse.isSuccess())
+            return ResponseEntity.status(409).body(apiResponse);
+        return ResponseEntity.status(202).body(apiResponse);
     }
 
 
@@ -50,7 +61,6 @@ public class ThemeController  {
         ApiResponse apiResponse = themeService.deleteTheme(id);
         if (apiResponse.isSuccess())
             return ResponseEntity.status(202).body(apiResponse);
-
         else
             return ResponseEntity.status(409).body(apiResponse);
     }
