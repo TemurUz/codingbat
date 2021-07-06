@@ -3,6 +3,8 @@ package pdp.uz.codingbat_app.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 import pdp.uz.codingbat_app.entity.ThemeEntity;
 import pdp.uz.codingbat_app.payload.ThemeDto;
@@ -13,11 +15,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/theme")
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ThemeController  {
 
     @Autowired
     private ThemeServiceImpl themeService;
 
+    @PreAuthorize(value = "hasAnyRole('DIRECTOR', 'MANAGER')")
     @GetMapping("/list")
     public ResponseEntity<List<ThemeEntity>> getThemes(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         List<ThemeEntity> themes = themeService.getThemes(page, size);
@@ -25,6 +29,7 @@ public class ThemeController  {
     }
 
 
+    @PreAuthorize(value = "hasAnyRole('DIRECTOR', 'MANAGER', 'USER')")
     @GetMapping("/{id}")
     public ResponseEntity<ThemeEntity> getTheme(@PathVariable  Long id) {
         ThemeEntity theme = themeService.getTheme(id);
@@ -35,6 +40,7 @@ public class ThemeController  {
     }
 
 
+    @PreAuthorize(value = "hasAnyRole('DIRECTOR')")
     @PostMapping("/save")
     public ResponseEntity<ApiResponse> saveTheme(@RequestBody ThemeDto themeDto) {
         ApiResponse apiResponse = themeService.saveTheme(themeDto);
@@ -45,6 +51,7 @@ public class ThemeController  {
     }
 
 
+    @PreAuthorize(value = "hasAnyRole('DIRECTOR')")
     @PutMapping("/edit/{id}")
     public ResponseEntity<ApiResponse> editTheme(@PathVariable Long id, @RequestBody ThemeDto themeDto) {
 
@@ -56,6 +63,7 @@ public class ThemeController  {
     }
 
 
+    @PreAuthorize(value = "hasAnyRole('DIRECTOR')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse> deleteTheme(@PathVariable Long id) {
         ApiResponse apiResponse = themeService.deleteTheme(id);

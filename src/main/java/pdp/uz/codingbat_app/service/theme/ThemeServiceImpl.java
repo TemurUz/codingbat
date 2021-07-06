@@ -56,8 +56,9 @@ public class ThemeServiceImpl implements ThemeService {
         themeEntity.setName(themeDto.getName());
         themeEntity.setDescription(themeDto.getDescription());
         themeEntity.setLanguages(languages.get());
+        themeRepository.save(themeEntity);
 
-        return new ApiResponse("saved theme", false);
+        return new ApiResponse("saved theme", true);
     }
 
     @Override
@@ -81,6 +82,8 @@ public class ThemeServiceImpl implements ThemeService {
         themeEntity.setName(themeDto.getName());
         themeEntity.setDescription(themeDto.getDescription());
         themeEntity.setLanguages(languages.get());
+        themeRepository.save(themeEntity);
+
         return new ApiResponse("edit theme", true);
     }
 

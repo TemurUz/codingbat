@@ -7,6 +7,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import pdp.uz.codingbat_app.entity.UsersEntity;
+import pdp.uz.codingbat_app.payload.HasRole;
+import pdp.uz.codingbat_app.payload.PagedResponse;
 import pdp.uz.codingbat_app.service.user.UserService;
 import pdp.uz.codingbat_app.payload.ApiResponse;
 import pdp.uz.codingbat_app.service.user.UserServiceImpl;
@@ -30,10 +32,13 @@ public class UserController {
      */
 
     @GetMapping("/list")
-    public ResponseEntity<?> getUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        List<UsersEntity> users = userService.getUsers(page, size);
+    public PagedResponse<UsersEntity> getUsers(
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "size", required = false, defaultValue = "10") int size
+    ) {
 
-        return ResponseEntity.status(200).body(users);
+
+        return userService.getUsers(page, size);
     }
 
     /**
@@ -63,6 +68,7 @@ public class UserController {
     public ResponseEntity<ApiResponse> saveUser(
             @Valid @RequestBody UsersEntity userEntity
     ) {
+
 
         ApiResponse apiResponse = userService.saveUser(userEntity);
         if (!apiResponse.isSuccess())
